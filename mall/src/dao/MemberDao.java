@@ -7,6 +7,7 @@ import vo.*;
 
 
 public class MemberDao {
+	// 로그인시 이메일과 비밀번호 체크
 	public String login(Member member) throws Exception {
 		String memberEmail = null;
 		DBUtil dbUtil = new DBUtil();
@@ -22,6 +23,7 @@ public class MemberDao {
 		conn.close();
 		return memberEmail;
 	}	
+	// 맴버 정보 입력
 	public void insertMember(Member member) throws Exception {
 		DBUtil dbUtil = new DBUtil();
 		Connection conn = dbUtil.getConnection();
@@ -35,7 +37,7 @@ public class MemberDao {
 		
 		conn.close();
 	}
-	
+	// 이메일 중복 확인
 	public Member selectMemberEmailCk(String memberEmail) throws Exception {
 		Member member = null;
 		DBUtil dbUtil = new DBUtil();
@@ -51,6 +53,28 @@ public class MemberDao {
 		}
 		conn.close();
 		
+		return member;
+	}
+	// 회원정보
+	public Member selectMemberOne(String memberEmail) throws Exception{
+		Member member = null;
+		
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		
+		String sql = "select member_email, member_name, member_date from member where member_email = ?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setString(1, memberEmail);
+		ResultSet rs = stmt.executeQuery();
+		
+		if(rs.next()) {
+			member = new Member();
+			member.setMemberEmail(rs.getString("member_email"));
+			member.setMemberName(rs.getString("member_name"));
+			member.setMemberDate(rs.getString("member_date"));
+		}
+		
+		conn.close();
 		return member;
 	}
 }

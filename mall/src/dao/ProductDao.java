@@ -52,5 +52,57 @@ public class ProductDao {
 		return list;
 	}
 	
+	// 카테고리별 상품 목록 메서드
+	public ArrayList<Product> selectProductListByCategoryId(int categoryId) throws Exception{
+		ArrayList<Product> list = new ArrayList<Product>();
+		
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		System.out.println(conn+"<--conn");
+		
+		String sql = "select product_id, product_pic, product_name, product_price from product where category_id = ?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setInt(1, categoryId);
+		
+		ResultSet rs = stmt.executeQuery();
+		
+		while(rs.next()) {
+			Product p = new Product();
+			p.setProductId(rs.getInt("product_id"));
+			p.setProductPic(rs.getString("product_pic"));
+			p.setProductName(rs.getString("product_name"));
+			p.setProductPrice(rs.getInt("product_price"));
+			list.add(p);
+		}
+		
+		conn.close();
+		return list;
+	}
+	
+	// 검색별 상품 목록 메서드
+	public ArrayList<Product> searchProductList(String productName) throws Exception{
+		ArrayList<Product> list = new ArrayList<Product>();
+		
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		System.out.println(conn+"<--conn");
+		
+		String sql = "select product_id, product_pic, product_name, product_price from product where product_name like ?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setString(1, "%"+productName+"%");
+		ResultSet rs = stmt.executeQuery();
+		
+		while(rs.next()) {
+			Product p = new Product();
+			p.setProductId(rs.getInt("product_id"));
+			p.setProductPic(rs.getString("product_pic"));
+			p.setProductName(rs.getString("product_name"));
+			p.setProductPrice(rs.getInt("product_price"));
+			list.add(p);
+		}
+		
+		conn.close();
+		return list;
+	}
 
 }

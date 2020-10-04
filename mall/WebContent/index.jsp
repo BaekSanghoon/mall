@@ -21,18 +21,30 @@
 <div class="container">
 	<div> <!-- 타이틀과 검색바 -->
 		
-		<div Class="row"><!-- 타이틀 -->
-			<dic class="col"><h2>Goodee Shop</h2></dic>
-			<dic class="col"><!-- 검색창 -->
-				<form>
-					<input type="text">
+		<div Class="row"> <!-- 타이틀 -->
+			<dic class="col">
+				<h2><a class="text"href="<%=request.getContextPath()%>/index.jsp">Goodee Shop</a></h2>
+			</dic>
+			<dic class="col" method="post" action="<%=request.getContextPath()%>/product/searchProduct.jsp" ><!-- 검색창 -->
+				<form method="post" action="<%=request.getContextPath()%>/product/searchProduct.jsp">
+					<input type="text" name="productName" >
 					<button type="submit">검색</button>
 				</form>
 			</dic>
 			<dic class="col"><!-- 아이콘 -->
-				<i class='fas fa-user-alt' style='font-size:40px;'></i>
-				<i class='fas fa-shopping-cart' style='font-size:40px;'></i>
-			</dic>
+			<%
+				if(session.getAttribute("loginMemberEmail") == null){
+			%>
+					<a class="text-dark" href="<%=request.getContextPath()%>/member/login.jsp"><i class='fas fa-user-alt' style='font-size:40px;'></i></a>	
+			<%
+				}else{
+			%>
+					<a class="text-dark" href="<%=request.getContextPath()%>/orders/myOrdersList.jsp"><i class='fas fa-user-alt' style='font-size:40px;'></i></a>	
+			<%
+				}
+			%>	
+			
+				<i class='fas fa-shopping-cart' style='font-size:40px;'></i>					
 		</div>
 
 	</div>
@@ -68,6 +80,7 @@
 	  		%>
 		</nav>
 	</div>
+	 
 	<div><!-- 전체카테고리 / 이미지 베너 -->
 		<div class="row">
 		  <div class="col-sm-3">
@@ -75,7 +88,7 @@
 		  	<%
 		  		for(Category c : categoryList1) {
 		  	%>
-		  		<a href="" style= " border-radius: 12px; width:285px; padding:10px ; " class="btn btn-primary btn-lg btn-block"><%=c.getCategoryName() %></a>
+		  		<a href="<%=request.getContextPath()%>/product/productList.jsp?categoryId=<%=c.getCategoryId()%>" style= " border-radius: 12px; width:285px; padding:10px ; " class="btn btn-primary btn-lg btn-block"><%=c.getCategoryName() %></a>
 		  	<%		
 		  		}
 		  	%>
@@ -85,12 +98,13 @@
 		  	<img src="<%=request.getContextPath() %>/image/sh1.PNG">
 		  </div>
 		</div>
+		
 		<!-- 추천 카테고리 이미지 링크 -->
 		<div>
 			<%
 		  		for(Category c : categoryList2) {
 		  	%>
-		  		<a href="">
+		  		<a href="<%=request.getContextPath()%>/product/productList.jsp?categoryId=<%=c.getCategoryId()%>">
 		  			<img class="rounded-circle" style="padding:15px;" src="<%=request.getContextPath()%>/image/<%=c.getCategoryPic()%>">		  			
 		  		</a>
 		  	<%		
@@ -109,7 +123,7 @@
 			<%
 		  		for(Category c : categoryList1) {
 		  	%>
-		  		<a href=""class="btn btn-primary"><%=c.getCategoryName() %></a>
+		  		<a href="<%=request.getContextPath()%>/product/productList.jsp?categoryId=<%=c.getCategoryId()%>"class="btn btn-primary"><%=c.getCategoryName() %></a>
 		  	<%		
 		  		}
 		  	%>
