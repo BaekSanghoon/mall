@@ -9,6 +9,18 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 <title>Insert title here</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$("#btn").click(function(){
+		if($("#productName").val() == "") {
+			alert("productName 입력")
+			return;
+		}
+		$("#index").submit();
+		});
+	});
+</script>
 </head>
 <%
 	CategoryDao categoryDao = new CategoryDao();
@@ -26,9 +38,9 @@
 				<h2><a class="text"href="<%=request.getContextPath()%>/index.jsp">Goodee Shop</a></h2>
 			</dic>
 			<dic class="col" method="post" action="<%=request.getContextPath()%>/product/searchProduct.jsp" ><!-- 검색창 -->
-				<form method="post" action="<%=request.getContextPath()%>/product/searchProduct.jsp">
-					<input type="text" name="productName" >
-					<button type="submit">검색</button>
+				<form method="post" action="<%=request.getContextPath()%>/product/searchProduct.jsp" id="index">
+					<input type="text" name="productName" id="productName">
+					<button type="button" id="btn">검색</button>
 				</form>
 			</dic>
 			<dic class="col"><!-- 아이콘 -->

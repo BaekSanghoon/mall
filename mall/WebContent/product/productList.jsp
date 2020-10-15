@@ -57,32 +57,6 @@
 		</div>
 	</div>
 	
-	<div> <!-- 로그인/회원가입 메뉴바 -->
-		<nav class="navbar navbar-expand-sm bg-dark">
-			<ul class="navbar-nav mr-auto"></ul>
-		<% 
-			if(session.getAttribute("loginMemberEmail") == null){
-		%>
-				<!-- 로그아웃 상태 -->
-				<ul class="navbar-nav mr-right">
-					<li class="nav-iten"><a class="nav-link btn btn-primary brn-sm" href="<%=request.getContextPath()%>/member/login.jsp">로그인</a></li>
-					&nbsp;
-					<li class="nav-iten"><a class="nav-link btn btn-light btn-sm" href="<%=request.getContextPath()%>/member/signup.jsp">회원가입</a></li>
-				</ul>
-		<%
-			}else{
-		%>
-				<!-- 로그인 상태 -->
-				<ul class="navbar-nav mr-right">
-					<li class="nav-iten"><a class="nav-link btn btn-danger btn-sm" href="<%=request.getContextPath()%>/member/logoutAction.jsp">로그아웃</a></li>
-					&nbsp;
-					<li class="nav-iten"><a class="nav-link btn btn-light btn-sm" href="<%=request.getContextPath()%>/member/memberOne.jsp">회원정보</a></li>
-				</ul>
-		<%
-			}
-		
-		%>
-	</div>
 	
 	<div class="jumbotron">
 	<h1>상품 목록</h1>
