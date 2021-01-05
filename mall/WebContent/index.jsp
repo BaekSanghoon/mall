@@ -8,90 +8,85 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-<title>Insert title here</title>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-	$(document).ready(function(){
-		$("#btn").click(function(){
-		if($("#productName").val() == "") {
-			alert("productName 입력")
-			return;
-		}
-		$("#index").submit();
-		});
-	});
-</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				console.log("document ready");
+				
+				$("#searchProductSubmit").click(function() {
+					console.log("started search product");
+					
+					if ($("#searchProductName").val() == "") {
+						alert("검색어를 입력하세요.");
+						
+						$("#searchProductName").focus();
+						return;
+					}
+					
+					$("#searchProductForm").submit();
+				});
+			});
+		</script>
 </head>
-<%
+<%	Member paramMember = new Member();
+	paramMember.setMemberEmail((String)(session.getAttribute("loginMemberEmail")));
+	
+	MemberDao memberDao = new MemberDao();
+	Member member = memberDao.selectMemberOne(paramMember);
+	
 	CategoryDao categoryDao = new CategoryDao();
-	//카테고리 이름 리스트
-	ArrayList<Category> categoryList1 = categoryDao.selectCategoryList();
-	//카테고리 이미지 리스트
-	ArrayList<Category> categoryList2 = categoryDao.selectCategoryCkList();
+	ArrayList<Category> categoryList1 = categoryDao.selectCategoryList();	//카테고리 이름 리스트
+	ArrayList<Category> categoryList2 = categoryDao.selectCategoryCkList();	//카테고리 이미지 리스트
 %>
 <body>
-<div class="container">
-	<div> <!-- 타이틀과 검색바 -->
-		
-		<div Class="row"> <!-- 타이틀 -->
-			<dic class="col">
-				<h2><a class="text"href="<%=request.getContextPath()%>/index.jsp">Goodee Shop</a></h2>
-			</dic>
-			<dic class="col" method="post" action="<%=request.getContextPath()%>/product/searchProduct.jsp" ><!-- 검색창 -->
-				<form method="post" action="<%=request.getContextPath()%>/product/searchProduct.jsp" id="index">
-					<input type="text" name="productName" id="productName">
-					<button type="button" id="btn">검색</button>
-				</form>
-			</dic>
-			<dic class="col"><!-- 아이콘 -->
-			<%
-				if(session.getAttribute("loginMemberEmail") == null){
-			%>
-					<a class="text-dark" href="<%=request.getContextPath()%>/member/login.jsp"><i class='fas fa-user-alt' style='font-size:40px;'></i></a>	
-			<%
-				}else{
-			%>
-					<a class="text-dark" href="<%=request.getContextPath()%>/orders/myOrdersList.jsp"><i class='fas fa-user-alt' style='font-size:40px;'></i></a>	
-			<%
-				}
-			%>	
-			
-				<i class='fas fa-shopping-cart' style='font-size:40px;'></i>					
-		</div>
+		<div class="container-lg mt-5 mb-4">
 
-	</div>
-	<div> <!-- 로그인 회원가입 메뉴바 -->
-		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-		  <%
-		  	if(session.getAttribute("loginMemberEmail") == null) {
-		  %>
-		  <!-- Links -->
-			 <ul class="navbar-nav">
-			    <!-- 로그인이 되지 않았을때 보여짐(로그 아웃 상태) -->
-			    <li class="nav-item">
-			      <a class="nav-link" href="<%=request.getContextPath()%>/member/login.jsp">로그인</a>
-			    </li>
-			    <li class="nav-item">
-			      <a class="nav-link" href="<%=request.getContextPath()%>/member/signup.jsp">회원가입</a>
-			    </li>
-	  		</ul>
-	  		<%
-		  	} else {
-	  		%>
-	  		<ul class="navbar-nav">
-			    <li class="nav-item">
-			    <!-- 로그인 상태 -->
-			      <a class="nav-link" href="<%=request.getContextPath()%>/member/logoutAction.jsp">로그아웃</a>
-			    </li>
-			    <li class="nav-item">
-			      <a class="nav-link" href="<%=request.getContextPath()%>/member/logoutAction.jsp">회원정보</a>
-			    </li>
-	  		</ul>
-	  		<%
-		  		}
-	  		%>
-		</nav>
-	</div>
+			<br>
+			
+			<form method="post" action="<%=request.getContextPath()%>/product/productList.jsp" id="searchProductForm">
+				<div class="row">
+					<div class="col text-left align-middle">
+						<h1 class="font-weight-bolder">
+							<a class="text-reset text-decoration-none" href="<%=request.getContextPath()%>/index.jsp">Goodee Shop</a>
+						</h1>
+					</div>
+					<div class="col d-flex align-items-center">
+						<input class="form-control" type="text" name="searchProductName" placeholder="상품 검색" id="searchProductName">
+					</div>
+					<div class="col d-flex">
+						<div class="row flex-fill">
+							<div class="col-4 d-flex align-items-center">
+								<button class="btn btn-dark btn-block" type="button" id="searchProductSubmit">검색</button>
+							</div>
+							
+							<div class="col-8 text-right align-middle">
+								<a class="btn" href="<%=request.getContextPath()%>/member/memberOne.jsp"><i class='fas fa-user-alt' style='font-size:36px'></i></a>
+								<a class="btn" href="<%=request.getContextPath()%>/notice/noticeList.jsp"><i class='fas fas fa-file-alt' style='font-size:36px'></i></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="container-fluid bg-dark py-2"> <!-- 로그인 회원가입 메뉴바 -->
+			<div class="container-lg text-right align-middle">
+				<%
+					if (session.getAttribute("loginMemberEmail") == null) {
+				%>
+						<a class="btn btn-sm btn-primary ml-1" href="<%=request.getContextPath()%>/member/login.jsp">로그인</a>
+						<a class="btn btn-sm btn-light ml-1" href="<%=request.getContextPath()%>/member/signup.jsp">회원가입</a>
+				<%
+					} else {
+				%>
+						<a class="text-light text-decoration-none ml-1" href="<%=request.getContextPath()%>/member/memberOne.jsp"><%=member.getMemberName() %>님</a>
+						<a class="btn btn-sm btn-primary ml-1" href="<%=request.getContextPath()%>/member/logoutAction.jsp">로그아웃</a>
+				<%
+					}
+				%>
+			</div>
+		</div>
+<div class="container">
+
 	 
 	<div><!-- 전체카테고리 / 이미지 베너 -->
 		<div class="row">

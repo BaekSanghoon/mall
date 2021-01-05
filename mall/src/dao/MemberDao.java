@@ -7,7 +7,7 @@ import vo.*;
 
 
 public class MemberDao {
-	// 로그인시 이메일과 비밀번호 체크
+	// 濡쒓렇�씤�떆 �씠硫붿씪怨� 鍮꾨�踰덊샇 泥댄겕
 	public String login(Member member) throws Exception {
 		String memberEmail = null;
 		DBUtil dbUtil = new DBUtil();
@@ -17,13 +17,13 @@ public class MemberDao {
 		stmt.setString(1, member.getMemberEmail());
 		stmt.setString(2, member.getMemberPw());
 		ResultSet rs = stmt.executeQuery();
-		if(rs.next()) { //로그인 성공시 이메일 리턴
+		if(rs.next()) { //濡쒓렇�씤 �꽦怨듭떆 �씠硫붿씪 由ы꽩
 			memberEmail = rs.getString("member_email");
 		}
 		conn.close();
 		return memberEmail;
 	}	
-	// 맴버 정보 입력
+	// 留대쾭 �젙蹂� �엯�젰
 	public void insertMember(Member member) throws Exception {
 		DBUtil dbUtil = new DBUtil();
 		Connection conn = dbUtil.getConnection();
@@ -37,7 +37,7 @@ public class MemberDao {
 		
 		conn.close();
 	}
-	// 이메일 중복 확인
+	// �씠硫붿씪 以묐났 �솗�씤
 	public Member selectMemberEmailCk(String memberEmail) throws Exception {
 		Member member = null;
 		DBUtil dbUtil = new DBUtil();
@@ -47,7 +47,7 @@ public class MemberDao {
 		stmt.setString(1, memberEmail);
 		ResultSet rs = stmt.executeQuery();
 		if(rs.next()) {
-			//입력한 이메일은 이미 가입중이라 사용할수 없음.
+			//�엯�젰�븳 �씠硫붿씪�� �씠誘� 媛��엯以묒씠�씪 �궗�슜�븷�닔 �뾾�쓬.
 			member = new Member();
 			member.setMemberEmail(rs.getString("id"));
 		}
@@ -55,26 +55,26 @@ public class MemberDao {
 		
 		return member;
 	}
-	// 회원정보
-	public Member selectMemberOne(String memberEmail) throws Exception{
-		Member member = null;
+	// �쉶�썝�젙蹂�
+	public Member selectMemberOne(Member paramMember) throws Exception {
+		Member returnMember = null;
 		
 		DBUtil dbUtil = new DBUtil();
 		Connection conn = dbUtil.getConnection();
 		
-		String sql = "select member_email, member_name, member_date from member where member_email = ?";
+		String sql = "SELECT member_email, member_name, member_date FROM member WHERE member_email=?";
 		PreparedStatement stmt = conn.prepareStatement(sql);
-		stmt.setString(1, memberEmail);
-		ResultSet rs = stmt.executeQuery();
+		stmt.setString(1, paramMember.getMemberEmail());
 		
-		if(rs.next()) {
-			member = new Member();
-			member.setMemberEmail(rs.getString("member_email"));
-			member.setMemberName(rs.getString("member_name"));
-			member.setMemberDate(rs.getString("member_date"));
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			returnMember = new Member();
+			returnMember.setMemberEmail(rs.getString("member_email"));
+			returnMember.setMemberName(rs.getString("member_name"));
+			returnMember.setMemberDate(rs.getString("member_date"));
 		}
 		
 		conn.close();
-		return member;
+		return returnMember;
 	}
 }
