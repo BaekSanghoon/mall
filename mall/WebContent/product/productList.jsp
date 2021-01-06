@@ -8,14 +8,30 @@
 <head>
 <meta charset="UTF-8">
 <title>productList</title>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<link rel="stylesheet"
-	href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-	integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
-	crossorigin="anonymous">
-</head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				console.log("document ready");
+				
+				$("#searchProductSubmit").click(function() {
+					console.log("started search product");
+					
+					if ($("#ProductName").val() == "") {
+						alert("검색어를 입력하세요.");
+						
+						$("#ProductName").focus();
+						return;
+					}
+					
+					$("#searchProductForm").submit();
+				});
+			});
+		</script>
 <body>
+
+
 <%
 	int categoryId = Integer.parseInt(request.getParameter("categoryId"));
 	ProductDao productDao = new ProductDao();
@@ -25,37 +41,41 @@
 	// 전체 카테고리 목록
 	ArrayList<Category> categoryList1 = categoryDao.selectCategoryList();
 %>
+
+
 <div class="container">
-<div class="row"  style="margin : 10px;"> <!-- 헤더 goodee shop / 검색바 -->
-		<div class="col-sm-4 font-weight-bold"><h2><a class="text-dark"  style="text-decoration : none;" href="<%=request.getContextPath()%>/index.jsp">Goodee Shop</a></h2></div>
-		<div class="col">
-			<form method="post" action="<%=request.getContextPath()%>/product/searchProduct.jsp">
-				<table>
-					<tr>
-						<td width="400px">
-							<input class="form-control" type="text" name="productName">
-						</td>
-						<td width="100px">
-							<button class="btn btn-info" type="submit">검색</button>	
-						</td>
-					</tr>
-				</table>	
+
+		<div class="container-lg mt-5 mb-4">
+
+			<br>
+			
+			<form method="post" action="<%=request.getContextPath()%>/product/searchProduct.jsp" id="searchProductForm">
+				<div class="row">
+					<div class="col text-left align-middle">
+						<h1 class="font-weight-bolder">
+							<a class="text-reset text-decoration-none" href="<%=request.getContextPath()%>/index.jsp">Goodee Shop</a>
+						</h1>
+					</div>
+					<div class="col d-flex align-items-center">
+						<input class="form-control" type="text" name="productName" placeholder="이름으로 상품 검색" id="ProductName ">
+					</div>
+					<div class="col d-flex">
+						<div class="row flex-fill">
+							<div class="col-4 d-flex align-items-center">
+								<button class="btn btn-info" type="submit" id="searchProductSubmit" >검색</button>	
+							</div>
+							
+							<div class="col-8 text-right align-middle">
+								<a class="btn" href="<%=request.getContextPath()%>/member/memberOne.jsp"><i class='fas fa-user-alt' style='font-size:36px'></i></a>
+								<a class="btn" href="<%=request.getContextPath()%>/notice/noticeList.jsp"><i class='fas fas fa-file-alt' style='font-size:36px'></i></a>
+							</div>
+						</div>
+					</div>
+				</div>
 			</form>
 		</div>
-		<div class="col-sm-3">
-		<%
-			if(session.getAttribute("loginMemberEmail") == null){ //로그인 상태가 아닐 경우 아이콘을 누르면 로그인 페이지로 넘어가기
-		%>
-				<a class="text-dark" href="<%=request.getContextPath()%>/member/login.jsp"><i class='fas fa-user' style='font-size: 36px'></i></a>	
-		<%
-			}else{ // 로그인 상태라면 주문내역으로 넘어가기
-		%>
-				<a class="text-dark" href="<%=request.getContextPath()%>/orders/myOrdersList.jsp"><i class='fas fa-user' style='font-size: 36px'></i></a>	
-		<%
-			}
-		%>			
-		</div>
-	</div>
+
+
 	
 	
 	<div class="jumbotron">

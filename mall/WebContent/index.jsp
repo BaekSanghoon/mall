@@ -16,10 +16,10 @@
 				$("#searchProductSubmit").click(function() {
 					console.log("started search product");
 					
-					if ($("#searchProductName").val() == "") {
+					if ($("#ProductName").val() == "") {
 						alert("검색어를 입력하세요.");
 						
-						$("#searchProductName").focus();
+						$("#ProductName").focus();
 						return;
 					}
 					
@@ -28,7 +28,9 @@
 			});
 		</script>
 </head>
-<%	Member paramMember = new Member();
+<%	request.setCharacterEncoding("UTF-8");
+
+	Member paramMember = new Member();
 	paramMember.setMemberEmail((String)(session.getAttribute("loginMemberEmail")));
 	
 	MemberDao memberDao = new MemberDao();
@@ -37,13 +39,14 @@
 	CategoryDao categoryDao = new CategoryDao();
 	ArrayList<Category> categoryList1 = categoryDao.selectCategoryList();	//카테고리 이름 리스트
 	ArrayList<Category> categoryList2 = categoryDao.selectCategoryCkList();	//카테고리 이미지 리스트
+	
 %>
 <body>
 		<div class="container-lg mt-5 mb-4">
 
 			<br>
 			
-			<form method="post" action="<%=request.getContextPath()%>/product/productList.jsp" id="searchProductForm">
+			<form method="post" action="<%=request.getContextPath()%>/product/searchProduct.jsp" id="searchProductForm">
 				<div class="row">
 					<div class="col text-left align-middle">
 						<h1 class="font-weight-bolder">
@@ -51,12 +54,12 @@
 						</h1>
 					</div>
 					<div class="col d-flex align-items-center">
-						<input class="form-control" type="text" name="searchProductName" placeholder="상품 검색" id="searchProductName">
+						<input class="form-control" type="text" name="productName" placeholder="이름으로 상품 검색" id="ProductName ">
 					</div>
 					<div class="col d-flex">
 						<div class="row flex-fill">
 							<div class="col-4 d-flex align-items-center">
-								<button class="btn btn-dark btn-block" type="button" id="searchProductSubmit">검색</button>
+								<button class="btn btn-info" type="submit" id="searchProductSubmit" >검색</button>	
 							</div>
 							
 							<div class="col-8 text-right align-middle">

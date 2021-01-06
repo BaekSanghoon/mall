@@ -7,7 +7,7 @@ import vo.*;
 
 
 public class MemberDao {
-	// 濡쒓렇�씤�떆 �씠硫붿씪怨� 鍮꾨�踰덊샇 泥댄겕
+	
 	public String login(Member member) throws Exception {
 		String memberEmail = null;
 		DBUtil dbUtil = new DBUtil();
@@ -17,13 +17,13 @@ public class MemberDao {
 		stmt.setString(1, member.getMemberEmail());
 		stmt.setString(2, member.getMemberPw());
 		ResultSet rs = stmt.executeQuery();
-		if(rs.next()) { //濡쒓렇�씤 �꽦怨듭떆 �씠硫붿씪 由ы꽩
+		if(rs.next()) {
 			memberEmail = rs.getString("member_email");
 		}
 		conn.close();
 		return memberEmail;
 	}	
-	// 留대쾭 �젙蹂� �엯�젰
+	
 	public void insertMember(Member member) throws Exception {
 		DBUtil dbUtil = new DBUtil();
 		Connection conn = dbUtil.getConnection();
@@ -37,7 +37,7 @@ public class MemberDao {
 		
 		conn.close();
 	}
-	// �씠硫붿씪 以묐났 �솗�씤
+	
 	public Member selectMemberEmailCk(String memberEmail) throws Exception {
 		Member member = null;
 		DBUtil dbUtil = new DBUtil();
@@ -47,7 +47,6 @@ public class MemberDao {
 		stmt.setString(1, memberEmail);
 		ResultSet rs = stmt.executeQuery();
 		if(rs.next()) {
-			//�엯�젰�븳 �씠硫붿씪�� �씠誘� 媛��엯以묒씠�씪 �궗�슜�븷�닔 �뾾�쓬.
 			member = new Member();
 			member.setMemberEmail(rs.getString("id"));
 		}
@@ -55,7 +54,6 @@ public class MemberDao {
 		
 		return member;
 	}
-	// �쉶�썝�젙蹂�
 	public Member selectMemberOne(Member paramMember) throws Exception {
 		Member returnMember = null;
 		
@@ -75,6 +73,7 @@ public class MemberDao {
 		}
 		
 		conn.close();
+		
 		return returnMember;
 	}
 }
