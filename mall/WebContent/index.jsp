@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="dao.*" %>
 <%@ page import="vo.*" %>
+<%@ page import="commons.*" %>
 <%@ page import="java.util.*" %>
 <!DOCTYPE html>
 <html>
@@ -36,10 +37,22 @@
 	MemberDao memberDao = new MemberDao();
 	Member member = memberDao.selectMemberOne(paramMember);
 	
-	CategoryDao categoryDao = new CategoryDao();
-	ArrayList<Category> categoryList1 = categoryDao.selectCategoryList();	//카테고리 이름 리스트
-	ArrayList<Category> categoryList2 = categoryDao.selectCategoryCkList();	//카테고리 이미지 리스트
+	ListPage categoryListPage = new ListPage();
+	categoryListPage.setCurrentPage(1);
+	categoryListPage.setRowPerPage(5);
 	
+	CategoryDao categoryDao = new CategoryDao();
+	ArrayList<Category> categoryList1 = categoryDao.selectCategoryList(categoryListPage);	//카테고리 이름 리스트
+	ArrayList<Category> categoryList2 = categoryDao.selectCategoryCkList();	//카테고리 이미지 리스트
+
+	ProductDao productDao = new ProductDao();
+	ArrayList<Product> productList = productDao.selectProductList();
+	
+	int searchCategoryId = -1;
+	if (request.getParameter("searchCategoryId") != null) {
+		searchCategoryId = Integer.parseInt(request.getParameter("searchCategoryId"));
+	}
+
 %>
 <body>
 		<div class="container-lg mt-5 mb-4">
@@ -89,59 +102,83 @@
 			</div>
 		</div>
 <div class="container">
-
-	 
-	<div><!-- 전체카테고리 / 이미지 베너 -->
-		<div class="row">
-		  <div class="col-sm-3">
-		  	<div class="btn-group-vertical">
-		  	<%
-		  		for(Category c : categoryList1) {
-		  	%>
-		  		<a href="<%=request.getContextPath()%>/product/productList.jsp?categoryId=<%=c.getCategoryId()%>" style= " border-radius: 12px; width:285px; padding:10px ; " class="btn btn-primary btn-lg btn-block"><%=c.getCategoryName() %></a>
-		  	<%		
-		  		}
-		  	%>
-		  	</div>
-		  </div>
-		  <div class="col-sm-9">
-		  	<img src="<%=request.getContextPath() %>/image/sh1.PNG">
-		  </div>
+	<div class="row mt-3 mb-5"><!-- 전체카테고리 / 이미지 베너 -->
+		<div class="col-3">
+			<div class="d-flex flex-column">
+				<%
+				  for(Category c : categoryList1) {
+				%>
+				  <a class="btn btn-primary btn-lg btn-block m-2" href="<%=request.getContextPath()%>/product/productList.jsp?categoryId=<%=c.getCategoryId()%>" ><%=c.getCategoryName() %></a>
+				<%		
+				  }
+				%>
+			</div>
 		</div>
-		
-		<!-- 추천 카테고리 이미지 링크 -->
-		<div>
-			<%
-		  		for(Category c : categoryList2) {
-		  	%>
-		  		<a href="<%=request.getContextPath()%>/product/productList.jsp?categoryId=<%=c.getCategoryId()%>">
-		  			<img class="rounded-circle" style="padding:15px;" src="<%=request.getContextPath()%>/image/<%=c.getCategoryPic()%>">		  			
-		  		</a>
-		  	<%		
-		  		}
-		  	%>
-		</div>
+				
+		<div class="col-1"></div>
+				
+			<!-- 추천 카테고리 이미지 링크 -->
+		<span class="col-8 d-flex align-items-center text-reset text-decoration-none">
+			<img class="img-fluid border" src="<%=request.getContextPath() %>/image/sh1.jpg">
+		</span>
 	</div>
+	
+	
 	<%
 		Calendar today = Calendar.getInstance();
 	%>
+	
+	
 	<!-- 카테고리별 추천상품 -->
 	<div>
 		<h3> 카테고리별 추천상품<span class="badge badge-primary"><%=today.get(Calendar.YEAR)%>.<%=today.get(Calendar.MONTH)+1%>.<%=today.get(Calendar.DAY_OF_MONTH)%></span> </h3>
 	</div>
-	<div>
+	<div class="row mt-4 mb-5">
 			<%
 		  		for(Category c : categoryList1) {
 		  	%>
-		  		<a href="<%=request.getContextPath()%>/product/productList.jsp?categoryId=<%=c.getCategoryId()%>"class="btn btn-primary"><%=c.getCategoryName() %></a>
+		  		<div class="col text-center align-middle">
+		  			<a href="<%=request.getContextPath()%>/product/productList.jsp?categoryId=<%=c.getCategoryId()%>"title="<%=c.getCategoryName()%>">
+		  				<img class="img-fluid rounded-circle border w-100" src="/mall-admin/image/<%=c.getCategoryPic()%>">
+		  			</a>
+		  		</div>	
 		  	<%		
 		  		}
 		  	%>
 	</div>
-	<%
-		ProductDao productDao = new ProductDao();
-		ArrayList<Product> productList = productDao.selectProductList();
-	%>
+	
+	
+	<div class="row">
+		<div class="col my-2">
+			<%
+				String categoryClasses = "";
+				if (searchCategoryId == -1) {
+					categoryClasses = "btn btn-primary btn-block";
+				} else {
+					categoryClasses = "btn btn-secondary btn-block";
+				}
+			%>
+			<a class="<%=categoryClasses%>" href="<%=request.getContextPath()%>/index.jsp">전체</a>
+		</div>
+		<%
+			for (Category c : categoryList1) {
+				categoryClasses = "";
+				if (searchCategoryId == c.getCategoryId()) {
+					categoryClasses = "btn btn-primary btn-block";
+				} else {
+					categoryClasses = "btn btn-secondary btn-block";
+				}
+		%>
+				<!-- 혹여나 카테고리가 많아서 다음줄로 넘어간다 하더라도 세로 마진을 줌으로써 버튼이 따닥따닥 붙는 현상을 줄이려고 했습니다 -->
+				<div class="col my-2">
+					<a class="<%=categoryClasses%>" href="<%=request.getContextPath()%>/index.jsp?searchCategoryId=<%=c.getCategoryId()%>"><%=c.getCategoryName() %></a>
+				</div>
+		<%
+			}
+		%>
+	</div>
+	
+	
 	<!-- 상품 목록 6 개 -->
 	<table>
 			<tr>
@@ -176,33 +213,29 @@
 			NoticeDao noticeDao = new NoticeDao();
 			ArrayList<Notice> noticeList = noticeDao.selectNoticeList();
 		%>
-		<div>
-			<table class="table">
-				<thead>
-					<tr>
-						<td>notice_id</td>
-						<td>notice_title</td>
-					</tr>
-				</thead>
-				<tbody>
-					<%	
-						for(Notice n : noticeList){
-					%>	
-					<tr>
-						<td><%=n.getNoticeId() %></td>
-						<td><a href= "<%=request.getContextPath()%>/notice/noticeOne.jsp?noticeId=<%=n.getNoticeId() %>" ><%=n.getNoticeTitle() %></a></td>
-					</tr>
-					<%
-						}
-					%>
-					<tr>
-						<td>
-							<a href="<%=request.getContextPath()%>/notice/noticeListAll.jsp" class="btn btn-info" role="button">[공지사항 전체보기]</a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+		
+			<div class="container-lg">
+				<div class="d-flex">
+					<div class="mr-4">
+						<h6 class="font-weight-bolder">공지사항</h6>
+					</div>
+					
+					<div class="mr-4 small font-weight-lighter">
+						<ul>
+							<%
+								for (Notice n : noticeList) {
+							%>
+									<li><a href="<%=request.getContextPath()%>/notice/noticeOne.jsp?noticeId=<%=n.getNoticeId()%>"><h4><%=n.getNoticeTitle() %></h4></a></li>
+							<%
+								}
+							%>
+							<li><a href="<%=request.getContextPath()%>/notice/noticeListAll.jsp" class="btn btn-info" role="button">[공지사항 전체보기]</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+		
 	</div>
 	</div>
 </body>

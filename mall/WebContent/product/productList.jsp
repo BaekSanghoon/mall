@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="commons.*" %>
 <%@ page import="vo.*" %>
 <%@ page import="dao.*" %>
 <%@ page import="java.util.*" %>
@@ -37,9 +38,10 @@
 	ProductDao productDao = new ProductDao();
 	ArrayList<Product> productList = productDao.selectProductListByCategoryId(categoryId);
 	
+	ListPage categoryListPage = new ListPage();	
 	CategoryDao categoryDao = new CategoryDao();
 	// 전체 카테고리 목록
-	ArrayList<Category> categoryList1 = categoryDao.selectCategoryList();
+	ArrayList<Category> categoryList1 = categoryDao.selectCategoryList(categoryListPage);
 %>
 
 
