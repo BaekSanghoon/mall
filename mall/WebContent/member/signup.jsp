@@ -8,15 +8,21 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 	$(document).ready(function(){
-		$("#btn").click(function(){
+		$("#signupSubmit").click(function(){
 		if($("#memberEmail").val() == "") {
-			alert("memberEmail 입력")
+			alert("memberEmail을 입력해주세요.");
+			
+			$("#memberEmail").focus();
 			return;
 		}else if($("#memberPw").val() == ""){
-			alert("memberPw 입력")
+			alert("memberPw 입력해 주세요.");
+			
+			$("#memberPw").focus();
 			return;			
 		}else if($("#memberName").val() == ""){
-			alert("memberName 입력")
+			alert("memberName 입력해 주세요.");
+			
+			$("#memberName").focus();
 			return;			
 		}
 		//submit to action
@@ -27,9 +33,9 @@
 </head>
 <body>
 <div class="container">
-<h1>회원 가입</h1>
-<form action="<%=request.getContextPath()%>/member/signupAction.jsp" id="signupForm">
-	<table class="table">
+<h2>회원 가입</h2>
+<form  method="post" action="<%=request.getContextPath()%>/member/signupAction.jsp" id="signupForm">
+	<table class="table table-striped">
 		<tr>
 			<td>member_email</td>
 			<td><input type="text"name="memberEmail" id="memberEmail"></td>
@@ -43,7 +49,7 @@
 			<td><input type="text"name="memberName" id="memberName"></td>
 		</tr>
 	</table>
-	<button type="button" id="btn">회원가입</button>
+	<button class="btn btn-info" type="submit" id="signupSubmit">회원가입</button>
 </form>
 </div>
 </body>

@@ -45,15 +45,13 @@
 	ArrayList<Category> categoryList1 = categoryDao.selectCategoryList(categoryListPage);	//카테고리 이름 리스트
 	ArrayList<Category> categoryList2 = categoryDao.selectCategoryCkList();	//카테고리 이미지 리스트
 
-	ProductDao productDao = new ProductDao();
-	ArrayList<Product> productList = productDao.selectProductList();
-	
 	int searchCategoryId = -1;
 	if (request.getParameter("searchCategoryId") != null) {
 		searchCategoryId = Integer.parseInt(request.getParameter("searchCategoryId"));
 	}
 
 %>
+
 <body>
 		<div class="container-lg mt-5 mb-4">
 
@@ -169,7 +167,6 @@
 					categoryClasses = "btn btn-secondary btn-block";
 				}
 		%>
-				<!-- 혹여나 카테고리가 많아서 다음줄로 넘어간다 하더라도 세로 마진을 줌으로써 버튼이 따닥따닥 붙는 현상을 줄이려고 했습니다 -->
 				<div class="col my-2">
 					<a class="<%=categoryClasses%>" href="<%=request.getContextPath()%>/index.jsp?searchCategoryId=<%=c.getCategoryId()%>"><%=c.getCategoryName() %></a>
 				</div>
@@ -177,36 +174,55 @@
 			}
 		%>
 	</div>
+
+	<%
+					ListPage productListPage = new ListPage();
+							productListPage.setCurrentPage(1);
+							productListPage.setRowPerPage(6);
+							
+							Product paramProduct = new Product();
+							paramProduct.setCategoryId(searchCategoryId);
+							paramProduct.setProductName("");
+							
+							ProductDao productDao = new ProductDao();
+							ArrayList<ProductAndCategory> productList = productDao.selectProductListWithPageAndSearch(productListPage, paramProduct);
+	%>
 	
-	
-	<!-- 상품 목록 6 개 -->
-	<table>
-			<tr>
-				<%
-					int i = 0;
-					for (Product p : productList) {
-						i=i+1;
-				%>
-						<td>
-							<div class="card" style="width: 400px">
-								<img class="card-img-top" src="<%=request.getContextPath()%>/image/<%=p.getProductPic()%>">
-								<div class="card-body">
-									<h4 class="card-title"><a href="<%=request.getContextPath()%>/product/productOne.jsp?productId=<%=p.getProductId()%>"><%=p.getProductName()%></a></h4>
-									<p class="card-text"><%=p.getProductPrice()%></p>
+				<div class="row my-2">
+						<%
+							int i = 0;
+							for (ProductAndCategory pac : productList) {
+								if (i%3 == 0) {
+						%>
+				</div>
+				<div class="row">
+						<%	
+								}
+						%>
+								<div class="col-4">
+									<a class="card mb-4 p-3 bg-light border-0 text-reset text-decoration-none" href="<%=request.getContextPath()%>/product/productOne.jsp?productId=<%=pac.getProduct().getProductId()%>">
+										<img class="card-img-top border w-100" src="/mall-admin/image/<%=pac.getProduct().getProductPic()%>">
+										<div class="card-body">
+											<h6 class="card-title text-right mx-n3 mt-n2 mb-n1"><%=pac.getProduct().getProductName() %></h6>
+											<%
+												if (pac.getProduct().getProductSoldout().equals("Y")) {
+											%>
+													<h4 class="card-text text-left mx-n3 mt-n1 mb-n3 text-secondary">품절</h4>
+											<%
+												} else {
+											%>
+													<h4 class="card-text text-left mx-n3 mt-n1 mb-n3"><%=pac.getProduct().getProductPrice() %>원</h4>
+											<%
+												}
+											%>
+										</div>
+									</a>
 								</div>
-							</div>
-						</td>
-				<%
-						if(i%3==0) {
-				%>
-							</tr><tr>
-				<%			
-						}
-					}
-				%>
-			</tr>
-	</table>
-	
+						<%
+								i = i + 1;
+							}
+						%>
+				</div>
 	<!-- 최근 공지 2개 -->
 	<div>
 		<%
@@ -225,7 +241,7 @@
 							<%
 								for (Notice n : noticeList) {
 							%>
-									<li><a href="<%=request.getContextPath()%>/notice/noticeOne.jsp?noticeId=<%=n.getNoticeId()%>"><h4><%=n.getNoticeTitle() %></h4></a></li>
+									<li><a href="<%=request.getContextPath()%>/notice/noticeOne.jsp?noticeId=<%=n.getNoticeId()%>"><h6><%=n.getNoticeTitle() %></h6></a></li>
 							<%
 								}
 							%>

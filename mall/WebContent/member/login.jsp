@@ -10,13 +10,17 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 	$(document).ready(function(){
-		$("#btn").click(function(){ // 폼 유효성 검사
+		$("#loginSubmit").click(function(){ // 폼 유효성 검사
 			//console.log("버튼클릭");
 		if($("#memberEmail").val().length<1) {
-			alert("이메일 확인");
+			alert("이메일을 입력해주세요");
+			
+			$("#memberEmail").focus();
 			return;
 		}else if($("#memberPw").val().length<1) {
-			alert("pw 확인");
+			alert("pw를  확인해 주세요.");
+			
+			$("#memberPw").focus();
 			return;
 		}
 		$("LoginForm").submit();
@@ -31,10 +35,10 @@
 		return;
 	}
 %>
-<div class="container">
-	<h1>로그인</h1>
+<div class="container" >
+	<h2>로그인</h2>
 	<form method="post" id="LoginForm" action="<%=request.getContextPath()%>/member/loginAction.jsp">
-		<table class="table">
+		<table class="table table-striped"	>
 			<tr>
 				<td>memberEmail</td>
 				<td><input type="text"name="memberEmail"id="memberEmail"></td>
@@ -44,7 +48,7 @@
 				<td><input type="text"name="memberPw"id="memberPw"></td>
 			</tr>	
 		</table>
-		<button type="button" id="btn">로그인</button>
+		<button class="btn btn-info" type="submit" id="loginSubmit">로그인</button>
 	</form>
 </div>
 
